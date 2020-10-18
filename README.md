@@ -13,8 +13,8 @@ Getting started
 ---------------
 
 ```typescript
-import { Application } from '@curveball/curveball';
-import serveFiles from '@curveball/static';
+import { Application } from '@curveball/core';
+import { serveFiles } from '@curveball/static';
 
 const app = new Application();
 app.use(
