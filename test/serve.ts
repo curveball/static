@@ -25,12 +25,12 @@ describe('serveFiles', () => {
 describe('serve', () => {
   const staticDir = `${process.cwd()}/test/assets`;
 
-  it('should serve the file', () => {
+  it('should serve the file', async () => {
     const ctx = buildContext(
       '/assets/test.txt'
     );
 
-    serve({
+    await serve({
       staticDir
     }, ctx);
 
@@ -39,12 +39,12 @@ describe('serve', () => {
     expect(ctx.response.type).to.equal('text/plain');
   });
 
-  it('should serve nothing if the route does not match', () => {
+  it('should serve nothing if the route does not match', async () => {
     const ctx = buildContext(
       '/nothing/test.txt'
     );
 
-    serve({
+    await serve({
       staticDir
     }, ctx);
 

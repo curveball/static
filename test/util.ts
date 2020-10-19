@@ -1,7 +1,11 @@
 import { BadRequest, NotFound } from '@curveball/http-errors';
-import { expect } from 'chai';
+import chai from 'chai';
+import chaiAsPromised from 'chai-as-promised';
 
 import { doesMatchRoute, validateFile, getMimeType } from '../src/util';
+
+chai.use(chaiAsPromised);
+const expect = chai.expect;
 
 describe('doesMatchRoute', () => {
   const staticDir = `${process.cwd()}/test/assets`;
@@ -22,19 +26,19 @@ describe('doesMatchRoute', () => {
 describe('validateFile', () => {
   const staticDir = `${process.cwd()}/test/assets`;
 
-  it('should validate file', () => {
-    validateFile(staticDir, '/assets/test.txt');
-    validateFile(staticDir, '/assets/nested/test.txt');
-    validateFile(staticDir, '/assets/nested/../test.txt');
+  it('should validate file', async () => {
+    await expect(validateFile(staticDir, '/assets/test.txt')).to.be.fulfilled;
+    await expect(validateFile(staticDir, '/assets/nested/test.txt')).to.be.fulfilled;
+    await expect(validateFile(staticDir, '/assets/nested/../test.txt')).to.be.fulfilled;
   });
 
-  it('should not validate file', () => {
-    expect(() => validateFile(staticDir, '/assets')).to.throw(BadRequest);
-    expect(() => validateFile(staticDir, '/assets/test.nope')).to.throw(NotFound);
-    expect(() => validateFile(staticDir, '/')).to.throw(BadRequest);
-    expect(() => validateFile(staticDir, '/assets/nested')).to.throw(BadRequest);
-    expect(() => validateFile(staticDir, '/assets/../')).to.throw(BadRequest);
-    expect(() => validateFile(staticDir, '/assets/../util.ts')).to.throw(BadRequest);
+  it('should not validate file', async () => {
+    await expect(validateFile(staticDir, '/assets')).to.be.rejectedWith(BadRequest);
+    await expect(validateFile(staticDir, '/assets/test.nope')).to.be.rejectedWith(NotFound);
+    await expect(validateFile(staticDir, '/')).to.be.rejectedWith(BadRequest);
+    await expect(validateFile(staticDir, '/assets/nested')).to.be.rejectedWith(BadRequest);
+    await expect(validateFile(staticDir, '/assets/../')).to.be.rejectedWith(BadRequest);
+    await expect(validateFile(staticDir, '/assets/../util.ts')).to.be.rejectedWith(BadRequest);
   });
 });
 

@@ -4,6 +4,8 @@ import path from 'path';
 import { BadRequest, NotFound } from '@curveball/http-errors';
 import mime from 'mime-types';
 
+const fsPromises = fs.promises;
+
 export function doesMatchRoute(staticDir: string, requestPath: string): boolean {
   const staticFolder = staticDir.split('/').pop();
   const pathFolder = requestPath.split('/')[1];
@@ -18,7 +20,7 @@ export function doesMatchRoute(staticDir: string, requestPath: string): boolean 
   return false;
 }
 
-export function validateFile(staticDir: string, requestPath: string): void {
+export async function validateFile(staticDir: string, requestPath: string): Promise<void> {
   const filePath = staticDir + '/' + requestPath.split('/').slice(2).join('/');
 
   // Only serve files that are within the static directory
@@ -38,7 +40,7 @@ export function validateFile(staticDir: string, requestPath: string): void {
   }
 
   // Only serve files (ex. not directories or symlinks)
-  if (!fs.statSync(filePath).isFile()) {
+  if (!(await fsPromises.stat(filePath)).isFile()) {
     throw new BadRequest('Invalid path');
   }
 
