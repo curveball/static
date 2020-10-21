@@ -20,6 +20,23 @@ describe('serveFiles', () => {
     expect(ctx.response.body.toString()).to.equal('test static file');
     expect(ctx.response.type).to.equal('text/plain');
   });
+
+  it('should serve nothing if the route does not match', async () => {
+    const ctx = buildContext(
+      '/nothing/test.txt'
+    );
+
+    await mwInvoke(
+      serveFiles({
+        staticDir: `${process.cwd()}/test/assets`,
+      }),
+      ctx
+    );
+
+    expect(ctx.response.body instanceof Buffer).to.be.false;
+    expect(ctx.response.body).to.be.null;
+    expect(ctx.response.type).to.equal('');
+  });
 });
 
 describe('serve', () => {
@@ -30,10 +47,11 @@ describe('serve', () => {
       '/assets/test.txt'
     );
 
-    await serve({
+    const fileServed = await serve({
       staticDir
     }, ctx);
 
+    expect(fileServed).to.be.true;
     expect(ctx.response.body instanceof Buffer).to.be.true;
     expect(ctx.response.body.toString()).to.equal('test static file');
     expect(ctx.response.type).to.equal('text/plain');
@@ -44,10 +62,11 @@ describe('serve', () => {
       '/nothing/test.txt'
     );
 
-    await serve({
+    const fileServed = await serve({
       staticDir
     }, ctx);
 
+    expect(fileServed).to.be.false;
     expect(ctx.response.body instanceof Buffer).to.be.false;
     expect(ctx.response.body).to.be.null;
     expect(ctx.response.type).to.equal('');

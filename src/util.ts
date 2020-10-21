@@ -11,17 +11,14 @@ export function doesMatchRoute(staticDir: string, requestPath: string): boolean 
   const pathFolder = requestPath.split('/')[1];
 
   // The last folder in the static path and the first folder in the request
-  // path need to be the same for this middleware to match. This is so every
-  // single request is not evaluated as if it's a file
-  if (staticFolder === pathFolder) {
-    return true;
-  }
-
-  return false;
+  // path need to be the same for this middleware to match.
+  // Ex: staticDir = /home/app/static & requestPath = /static/app.css
+  // This is so every single request is not evaluated as if it's a file
+  return staticFolder === pathFolder;
 }
 
 export async function validateFile(staticDir: string, requestPath: string): Promise<void> {
-  const filePath = staticDir + '/' + requestPath.split('/').slice(2).join('/');
+  const filePath = `${staticDir}/${requestPath.split('/').slice(2).join('/')}`;
 
   // Only serve files that are within the static directory
   const relativePath = path.relative(staticDir, filePath);
@@ -31,7 +28,7 @@ export async function validateFile(staticDir: string, requestPath: string): Prom
 
   // The file needs to exist and be accessible
   try {
-    fs.accessSync(filePath);
+    await fsPromises.access(filePath);
   } catch (e) {
     if (['ENOENT'].includes(e.code)) {
       throw new NotFound('Cannot find file');

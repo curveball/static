@@ -18,7 +18,9 @@ describe('doesMatchRoute', () => {
   });
 
   it('should not match routes', () => {
+    // Beginning folder of path is wrong
     expect(doesMatchRoute(staticDir, '/static/test.txt')).to.be.false;
+    // Access incorrect directory
     expect(doesMatchRoute(staticDir, '/')).to.be.false;
   });
 });
@@ -33,11 +35,17 @@ describe('validateFile', () => {
   });
 
   it('should not validate file', async () => {
+    // Directory
     await expect(validateFile(staticDir, '/assets')).to.be.rejectedWith(BadRequest);
+    // File doesn't exist
     await expect(validateFile(staticDir, '/assets/test.nope')).to.be.rejectedWith(NotFound);
+    // Wrong directory
     await expect(validateFile(staticDir, '/')).to.be.rejectedWith(BadRequest);
+    // Nested directory
     await expect(validateFile(staticDir, '/assets/nested')).to.be.rejectedWith(BadRequest);
+    // Relative path to directory
     await expect(validateFile(staticDir, '/assets/../')).to.be.rejectedWith(BadRequest);
+    // Relative path to missing file
     await expect(validateFile(staticDir, '/assets/../util.ts')).to.be.rejectedWith(BadRequest);
   });
 });

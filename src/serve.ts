@@ -12,17 +12,20 @@ export type Options = {
 
 export function serveFiles(options: Options): Middleware {
   return async (ctx: Context, next) => {
-    await serve(options, ctx);
-    next();
+    const fileServed = await serve(options, ctx);
+
+    if (!fileServed) {
+      return next();
+    }
   };
 }
 
-export async function serve(options: Options, ctx: Context): Promise<void> {
+export async function serve(options: Options, ctx: Context): Promise<boolean> {
   const { staticDir } = options;
   const { path: requestPath } = ctx.request;
 
   if (!doesMatchRoute(staticDir, requestPath)) {
-    return;
+    return false;
   }
 
   await validateFile(staticDir, requestPath);
@@ -32,4 +35,5 @@ export async function serve(options: Options, ctx: Context): Promise<void> {
   ctx.status = 200;
   ctx.response.body = await fsPromises.readFile(filePath);
   ctx.response.type = getMimeType(filePath);
+  return true;
 }
