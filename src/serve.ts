@@ -3,7 +3,7 @@ import fs from 'fs';
 import { Context, Middleware } from '@curveball/core';
 
 import { Options } from './types';
-import { doesMatchRoute, validateFile, getMimeType } from './util';
+import { doesMatchRoute, getFilePath, getMimeType, validateFile } from './util';
 
 const fsPromises = fs.promises;
 
@@ -25,7 +25,7 @@ export async function serve(options: Options, ctx: Context): Promise<boolean> {
     return false;
   }
 
-  const filePath = `${staticDir}/${requestPath.split('/').slice(2).join('/')}`;
+  const filePath = getFilePath(options, requestPath);
 
   await validateFile(filePath, staticDir);
 

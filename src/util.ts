@@ -8,12 +8,16 @@ import { Options } from './types';
 
 const fsPromises = fs.promises;
 
-export function doesMatchRoute(options: Options, requestPath: string): boolean {
-  const staticFolder = options.pathPrefix ? options.pathPrefix.replace('/', '') : options.staticDir.split('/').pop();
-  const pathFolder = requestPath.split('/')[1];
+export function getStaticPrefix(options: Options): string {
+  return options.pathPrefix ? options.pathPrefix : `/${options.staticDir.split('/').pop()}`;
+}
 
-  // Verify that the static asset asked for in the request matches the static folder
-  return staticFolder === pathFolder;
+export function doesMatchRoute(options: Options, requestPath: string): boolean {
+  return requestPath.startsWith(getStaticPrefix(options));
+}
+
+export function getFilePath(options: Options, requestPath: string): string {
+  return `${options.staticDir}${requestPath}`.replace(getStaticPrefix(options), '');
 }
 
 export async function validateFile(filePath: string, staticDir: string): Promise<void> {

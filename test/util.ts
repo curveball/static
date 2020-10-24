@@ -2,10 +2,30 @@ import { BadRequest, NotFound } from '@curveball/http-errors';
 import chai from 'chai';
 import chaiAsPromised from 'chai-as-promised';
 
-import { doesMatchRoute, validateFile, getMimeType } from '../src/util';
+import { doesMatchRoute, getFilePath, getMimeType, getStaticPrefix, validateFile } from '../src/util';
 
 chai.use(chaiAsPromised);
 const expect = chai.expect;
+
+describe('getStaticPrefix', () => {
+  const staticDir = `${process.cwd()}/test/assets`;
+
+  it('should get prefix from static directory', () => {
+    expect(getStaticPrefix({ staticDir })).to.equal('/assets');
+  });
+
+  it('should get prefix from option', () => {
+    expect(getStaticPrefix({ staticDir, pathPrefix: '/static' })).to.equal('/static');
+  });
+});
+
+describe('getFilePath', () => {
+  const staticDir = `${process.cwd()}/test/assets`;
+
+  it('should return path', () => {
+    expect(getFilePath({ staticDir }, '/assets/test.txt')).to.equal(`${staticDir}/test.txt`);
+  });
+});
 
 describe('doesMatchRoute', () => {
   const staticDir = `${process.cwd()}/test/assets`;
@@ -26,6 +46,7 @@ describe('doesMatchRoute', () => {
 
   it('should match routes with pathPrefix', () => {
     expect(doesMatchRoute({ staticDir, pathPrefix: '/static' }, '/static/test.txt')).to.be.true;
+    expect(doesMatchRoute({ staticDir, pathPrefix: '/static/more' }, '/static/more/test.txt')).to.be.true;
   });
 
   it('should match not routes with pathPrefix', () => {
