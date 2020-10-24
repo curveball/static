@@ -4,22 +4,19 @@ import path from 'path';
 import { BadRequest, NotFound } from '@curveball/http-errors';
 import mime from 'mime-types';
 
+import { Options } from './types';
+
 const fsPromises = fs.promises;
 
-export function doesMatchRoute(staticDir: string, requestPath: string): boolean {
-  const staticFolder = staticDir.split('/').pop();
+export function doesMatchRoute(options: Options, requestPath: string): boolean {
+  const staticFolder = options.pathPrefix ? options.pathPrefix.replace('/', '') : options.staticDir.split('/').pop();
   const pathFolder = requestPath.split('/')[1];
 
-  // The last folder in the static path and the first folder in the request
-  // path need to be the same for this middleware to match.
-  // Ex: staticDir = /home/app/static & requestPath = /static/app.css
-  // This is so every single request is not evaluated as if it's a file
+  // Verify that the static asset asked for in the request matches the static folder
   return staticFolder === pathFolder;
 }
 
-export async function validateFile(staticDir: string, requestPath: string): Promise<void> {
-  const filePath = `${staticDir}/${requestPath.split('/').slice(2).join('/')}`;
-
+export async function validateFile(filePath: string, staticDir: string): Promise<void> {
   // Only serve files that are within the static directory
   const relativePath = path.relative(staticDir, filePath);
   if (relativePath.startsWith('../')) {
