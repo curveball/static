@@ -1,7 +1,7 @@
 {
   "name": "@curveball/static",
-  "version": "0.0.0",
-  "description": "A curveball middleware for serving static files",
+  "version": "0.1.0",
+  "description": "A curveball middleware for serving static files from a filesystem",
   "main": "dist/index.js",
   "scripts": {
     "prepublishOnly": "make build",
@@ -28,7 +28,7 @@
     "http2",
     "curveball"
   ],
-  "author": "Evert Pot (https://evertpot.com/)",
+  "author": "Michael Humiston (https://michaelhumiston.com/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/curveball/static/issues"
