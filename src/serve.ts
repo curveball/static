@@ -32,5 +32,8 @@ export async function serve(options: Options, ctx: Context): Promise<boolean> {
   ctx.status = 200;
   ctx.response.body = await fsPromises.readFile(filePath);
   ctx.response.type = getMimeType(filePath);
+  if (options.maxAge) {
+    ctx.response.headers.set('Cache-Control', 'max-age=' + options.maxAge);
+  }
   return true;
 }
