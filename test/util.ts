@@ -1,6 +1,6 @@
 import { BadRequest, NotFound } from '@curveball/http-errors';
-import chai from 'chai';
-import chaiAsPromised from 'chai-as-promised';
+import * as chai from 'chai';
+import * as chaiAsPromised from 'chai-as-promised';
 
 import { doesMatchRoute, getFilePath, getMimeType, getStaticPrefix, validateFile } from '../src/util';
 
