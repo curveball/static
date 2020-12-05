@@ -19,6 +19,7 @@ describe('serveFiles', () => {
     expect(ctx.response.body instanceof Buffer).to.be.true;
     expect(ctx.response.body.toString()).to.equal('test static file');
     expect(ctx.response.type).to.equal('text/plain');
+    expect(ctx.response.headers.get('Cache-Control')).to.equal(null);
   });
 
   it('should serve nothing if the route does not match', async () => {
