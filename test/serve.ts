@@ -19,6 +19,7 @@ describe('serveFiles', () => {
     expect(ctx.response.body instanceof Buffer).to.be.true;
     expect(ctx.response.body.toString()).to.equal('test static file');
     expect(ctx.response.type).to.equal('text/plain');
+    expect(ctx.response.headers.get('Cache-Control')).to.equal(null);
   });
 
   it('should serve nothing if the route does not match', async () => {
@@ -70,5 +71,25 @@ describe('serve', () => {
     expect(ctx.response.body instanceof Buffer).to.be.false;
     expect(ctx.response.body).to.be.null;
     expect(ctx.response.type).to.equal('');
+  });
+
+
+  it('should return a Cache-Control header if maxAge is specified.', async () => {
+    const ctx = buildContext(
+      '/assets/test.txt'
+    );
+
+    await mwInvoke(
+      serveFiles({
+        staticDir: `${process.cwd()}/test/assets`,
+        maxAge: 3600
+      }),
+      ctx
+    );
+
+    expect(ctx.response.body instanceof Buffer).to.be.true;
+    expect(ctx.response.body.toString()).to.equal('test static file');
+    expect(ctx.response.type).to.equal('text/plain');
+    expect(ctx.response.headers.get('Cache-Control')).to.equal('max-age=3600');
   });
 });

@@ -15,12 +15,13 @@ Getting started
 ```typescript
 import { Application } from '@curveball/core';
 import serveFiles from '@curveball/static';
+import { join } from 'path';
 
 const app = new Application();
 app.use(
     serveFiles({
         // Absolute path to assets directory
-        staticDir: `${process.cwd()}/assets`,
+        staticDir: join(__dirname, 'assets'),
     })
 );
 ```
@@ -37,15 +38,17 @@ For example:
 | `/home/app/static`  | `/assets/app.css` |
 
 You would configure it like this:
+
 ```typescript
 import { Application } from '@curveball/core';
 import serveFiles from '@curveball/static';
+import { join } from 'path';
 
 const app = new Application();
 app.use(
     serveFiles({
         // Absolute path to assets directory
-        staticDir: `${process.cwd()}/static`,
+        staticDir: join(__dirname, 'static'),
         pathPrefix: '/assets',
     })
 );
@@ -58,7 +61,12 @@ The default export for this package is the `serveFiles` function. When called, t
 function returns a middleware. It accepts a dictionary of configuration options.
 
 ### Options
-- `staticDir`: Absolute path to assets directory. Assets cannot be served above this directory
-- `pathPrefix`: Request path to match if it differs from the static directory
+
+- `staticDir`: Absolute path to assets directory. Assets cannot be served above
+  this directory.
+- `pathPrefix`: Request path to match if it differs from the static directory.
+- `maxAge`: If specified, this will cause a `Cache-Control: max-age=n` header
+  to be added, where `n` is the value of `maxAge`.
+
 
 [1]: https://github.com/curveball/
