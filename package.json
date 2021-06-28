@@ -1,6 +1,6 @@
 {
   "name": "@curveball/static",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "A curveball middleware for serving static files from a filesystem",
   "main": "dist/index.js",
   "scripts": {
