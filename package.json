@@ -73,6 +73,6 @@
     "mime-types": "^2.1.29"
   },
   "peerDependencies": {
-    "@curveball/kernel": "^0.20.0"
+    "@curveball/kernel": ">=0.20.0 <1"
   }
 }
