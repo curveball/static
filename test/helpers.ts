@@ -1,10 +1,10 @@
-import { BaseContext, Context, MemoryRequest, MemoryResponse, invokeMiddlewares, Middleware } from '@curveball/core';
+import { Context, MemoryRequest, MemoryResponse, invokeMiddlewares, Middleware } from '@curveball/kernel';
 
 export function buildContext(path: string): Context {
 
-  const ctx = new BaseContext(
-    new MemoryRequest('GET', path),
-    new MemoryResponse()
+  const ctx = new Context(
+    new MemoryRequest('GET', path, 'http://localhost'),
+    new MemoryResponse('http://localhost')
   );
 
   return ctx;
