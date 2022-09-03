@@ -30,7 +30,7 @@ export async function validateFile(filePath: string, staticDir: string): Promise
   // The file needs to exist and be accessible
   try {
     await fsPromises.access(filePath);
-  } catch (e) {
+  } catch (e: any) {
     if (['ENOENT'].includes(e.code)) {
       throw new NotFound('Cannot find file');
     }

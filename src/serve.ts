@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 
-import { Context, Middleware } from '@curveball/core';
+import { Context, Middleware } from '@curveball/kernel';
 
 import { Options } from './types';
 import { doesMatchRoute, getFilePath, getMimeType, validateFile } from './util';
