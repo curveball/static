@@ -13,7 +13,7 @@ Getting started
 ---------------
 
 ```typescript
-import { Application } from '@curveball/core';
+import { Application } from '@curveball/kernel';
 import serveFiles from '@curveball/static';
 import { join } from 'path';
 
@@ -40,7 +40,7 @@ For example:
 You would configure it like this:
 
 ```typescript
-import { Application } from '@curveball/core';
+import { Application } from '@curveball/kernel';
 import serveFiles from '@curveball/static';
 import { join } from 'path';
 
