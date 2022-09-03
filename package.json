@@ -1,12 +1,12 @@
 {
   "name": "@curveball/static",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "A curveball middleware for serving static files from a filesystem",
   "main": "dist/index.js",
   "scripts": {
     "prepublishOnly": "make build",
     "test": "make lint test",
-    "lint": "make lint",  
+    "lint": "make lint",
     "tsc": "tsc",
     "start": "make start"
   },
