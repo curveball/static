@@ -14,6 +14,7 @@ test:
 test-cjs:
 	mkdir -p cjs-test
 	cd test; npx tsc --module commonjs --outdir ../cjs-test
+	cp -r test/assets/. cjs-test/test/assets
 	echo '{"type": "commonjs"}' > cjs-test/package.json
 	cd cjs-test; npx mocha --no-package
 
