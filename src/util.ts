@@ -1,12 +1,10 @@
-import * as fs from 'fs';
-import * as path from 'path';
+import * as fs from 'node:fs/promises';
+import * as path from 'node:path';
 
 import { BadRequest, NotFound } from '@curveball/http-errors';
 import * as mime from 'mime-types';
 
-import { Options } from './types';
-
-const fsPromises = fs.promises;
+import { Options } from './types.js';
 
 export function getStaticPrefix(options: Options): string {
   return options.pathPrefix ? options.pathPrefix : `/${options.staticDir.split('/').pop()}`;
@@ -29,7 +27,7 @@ export async function validateFile(filePath: string, staticDir: string): Promise
 
   // The file needs to exist and be accessible
   try {
-    await fsPromises.access(filePath);
+    await fs.access(filePath);
   } catch (e: any) {
     if (['ENOENT'].includes(e.code)) {
       throw new NotFound('Cannot find file');
@@ -38,7 +36,7 @@ export async function validateFile(filePath: string, staticDir: string): Promise
   }
 
   // Only serve files (ex. not directories or symlinks)
-  if (!(await fsPromises.stat(filePath)).isFile()) {
+  if (!(await fs.stat(filePath)).isFile()) {
     throw new BadRequest('Invalid path');
   }
 

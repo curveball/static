@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
-import { buildContext, mwInvoke } from './helpers';
-import { serveFiles, serve } from '../src/serve';
+import { buildContext, mwInvoke } from './helpers.js';
+import { serveFiles, serve } from '../src/serve.js';
 
 describe('serveFiles', () => {
   it('should return the requested file', async () => {
