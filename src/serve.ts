@@ -1,11 +1,9 @@
-import * as fs from 'fs';
+import * as fs from 'node:fs/promises';
 
 import { Context, Middleware } from '@curveball/kernel';
 
-import { Options } from './types';
-import { doesMatchRoute, getFilePath, getMimeType, validateFile } from './util';
-
-const fsPromises = fs.promises;
+import { Options } from './types.js';
+import { doesMatchRoute, getFilePath, getMimeType, validateFile } from './util.js';
 
 export function serveFiles(options: Options): Middleware {
   return async (ctx: Context, next) => {
@@ -30,7 +28,7 @@ export async function serve(options: Options, ctx: Context): Promise<boolean> {
   await validateFile(filePath, staticDir);
 
   ctx.status = 200;
-  ctx.response.body = await fsPromises.readFile(filePath);
+  ctx.response.body = await fs.readFile(filePath);
   ctx.response.type = getMimeType(filePath);
   if (options.maxAge) {
     ctx.response.headers.set('Cache-Control', 'max-age=' + options.maxAge);

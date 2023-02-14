@@ -2,9 +2,10 @@ import { BadRequest, NotFound } from '@curveball/http-errors';
 import * as chai from 'chai';
 import * as chaiAsPromised from 'chai-as-promised';
 
-import { doesMatchRoute, getFilePath, getMimeType, getStaticPrefix, validateFile } from '../src/util';
+import { doesMatchRoute, getFilePath, getMimeType, getStaticPrefix, validateFile } from '../src/util.js';
 
-chai.use(chaiAsPromised);
+// @ts-expect-error ESM shenanigans
+chai.use(chaiAsPromised.default ?? chaiAsPromised);
 const expect = chai.expect;
 
 describe('getStaticPrefix', () => {

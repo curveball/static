@@ -1,5 +1,5 @@
-import { serveFiles } from './serve';
-import { Options} from './types';
+import { serveFiles } from './serve.js';
+import { Options } from './types.js';
 
 export default serveFiles;
 export {
