@@ -1,11 +1,8 @@
 import { BadRequest, NotFound } from '@curveball/http-errors';
 import * as chai from 'chai';
-import * as chaiAsPromised from 'chai-as-promised';
 
 import { doesMatchRoute, getFilePath, getMimeType, getStaticPrefix, validateFile } from '../src/util.js';
 
-// @ts-expect-error ESM shenanigans
-chai.use(chaiAsPromised.default ?? chaiAsPromised);
 const expect = chai.expect;
 
 describe('getStaticPrefix', () => {
@@ -59,23 +56,40 @@ describe('validateFile', () => {
   const staticDir = `${process.cwd()}/test/assets`;
 
   it('should validate file', async () => {
-    await expect(validateFile(`${staticDir}/test.txt`, staticDir)).to.be.fulfilled;
-    await expect(validateFile(`${staticDir}/nested/test.txt`, staticDir)).to.be.fulfilled;
-    await expect(validateFile(`${staticDir}/nested/../test.txt`, staticDir)).to.be.fulfilled;
+    await validateFile(`${staticDir}/test.txt`, staticDir);
+    await validateFile(`${staticDir}/nested/test.txt`, staticDir);
+    await validateFile(`${staticDir}/nested/../test.txt`, staticDir);
   });
 
   it('should not validate file', async () => {
-    // Directory
-    await expect(validateFile(`${staticDir}/`, staticDir)).to.be.rejectedWith(BadRequest);
-    // File doesn't exist
-    await expect(validateFile(`${staticDir}/test.nope`, staticDir)).to.be.rejectedWith(NotFound);
-    // Nested directory
-    await expect(validateFile(`${staticDir}/nested`, staticDir)).to.be.rejectedWith(BadRequest);
-    // Relative path to directory
-    await expect(validateFile(`${staticDir}/../`, staticDir)).to.be.rejectedWith(BadRequest);
-    // Relative path to missing file
-    await expect(validateFile(`${staticDir}/../util.ts`, staticDir)).to.be.rejectedWith(BadRequest);
+
+    await assertReject(
+      validateFile(`${staticDir}/`, staticDir),
+      BadRequest
+    );
+    await assertReject(
+      // File doesn't exist
+      validateFile(`${staticDir}/test.nope`, staticDir),
+      NotFound
+    );
+    await assertReject(
+      // Nested directory
+      validateFile(`${staticDir}/nested`, staticDir),
+      BadRequest
+    );
+    await assertReject(
+      // Relative path to directory
+      validateFile(`${staticDir}/../`, staticDir),
+      BadRequest
+    );
+    await assertReject(
+      // Relative path to missing file
+      validateFile(`${staticDir}/../util.ts`, staticDir),
+      BadRequest
+    );
+
   });
+
 });
 
 describe('getMimeType', () => {
@@ -91,3 +105,16 @@ describe('getMimeType', () => {
   });
 
 });
+
+async function assertReject(promise: Promise<unknown>, expectedException: any) {
+
+  try {
+    await promise;
+    throw new Error('This promise should have rejected, but it didn\'t');
+  } catch (err) {
+
+    expect(err).to.be.an.instanceof(expectedException);
+
+  }
+
+}
