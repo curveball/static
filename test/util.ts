@@ -69,8 +69,8 @@ describe('validateFile', () => {
     );
     await assertReject(
       // File doesn't exist
-     validateFile(`${staticDir}/test.nope`, staticDir),
-     NotFound
+      validateFile(`${staticDir}/test.nope`, staticDir),
+      NotFound
     );
     await assertReject(
       // Nested directory
